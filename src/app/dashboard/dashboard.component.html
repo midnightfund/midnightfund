@@ -1,0 +1,31 @@
+<form class="row" (ngSubmit)="addCoin()">
+  <div class="column1">
+    <md-form-field>
+      <input mdInput placeholder="Add Coin" [mdAutocomplete]="auto" [formControl]="addCoinObject.controls['coin']">
+      <md-autocomplete #auto="mdAutocomplete">
+        <md-option *ngFor="let coin of filteredCoins | async" [value]="coin.name">
+          {{ coin.name + ' $' + coin.price_usd }}
+        </md-option>
+      </md-autocomplete>
+    </md-form-field>
+  </div>
+  <div class="column1">
+    <md-form-field *ngIf="addCoinObject.get('coin').valid">
+      <input mdInput placeholder="How much {{ addCoinObject.get('coin').value }} did you buy?" [formControl]="addCoinObject.controls['amount']" [textMask]="{ mask: numberMask }">
+    </md-form-field>
+  </div>
+  <div class="column1">
+    <md-form-field *ngIf="addCoinObject.get('coin').valid && addCoinObject.get('amount').valid">
+      <span mdPrefix>$ &nbsp;</span>
+      <input mdInput placeholder="How much did your {{ addCoinObject.get('amount').value + ' ' + addCoinObject.get('coin').value }} cost?" [formControl]="addCoinObject.controls['cost']" [textMask]="{ mask: dollarMask }">
+    </md-form-field>
+  </div>
+  <button md-raised-button color="primary" *ngIf="addCoinObject.get('coin').valid && addCoinObject.get('amount').valid && addCoinObject.get('cost').valid">Add</button>
+</form>
+
+<ng-container *ngIf="assets.length">
+  <h1>Your assets</h1>
+
+  <p *ngFor="let asset of assets">{{ asset.amount }} {{ asset.coin }} @${{ asset.cost }}</p>
+
+</ng-container>
