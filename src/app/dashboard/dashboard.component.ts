@@ -21,6 +21,7 @@ export class DashboardComponent implements OnInit {
   access_token: string;
   profile: Object;
   assets: Array<Object> = [];
+  validCoin: boolean = false;
   numberMask = createNumberMask({
     prefix: '',
     includeThousandsSeparator: true,
@@ -44,6 +45,7 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit() {
     console.log(this.profile);
+    console.log(this.addCoinObject);
     this.getCoins();
     this.getAccessToken();
   }
@@ -54,7 +56,7 @@ export class DashboardComponent implements OnInit {
       console.log(this.coins);
       this.filteredCoins = this.addCoinObject.get('coin').valueChanges
         .startWith(null)
-        .map(val => val ? this.filterCoins(val) : this.coins.slice());
+        .map(coinInput => coinInput ? this.filterCoins(coinInput) : this.coins.slice());
     });
   }
 
@@ -85,9 +87,22 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  filterCoins(val: string): string[] {
-    return this.coins.filter(option =>
-      option.name.toLowerCase().indexOf(val.toLowerCase()) === 0);
+  coinChange(coinInput) {
+    console.log(coinInput);
+    let searchCoin = this.coins.filter((coin) => {
+      return coin.name.toLowerCase() === coinInput.toLowerCase();
+    });
+    if(searchCoin.length === 1) {
+      this.validCoin = true;
+    } else {
+      this.validCoin = false;
+    }
+  }
+
+  filterCoins(coinInput: string): string[] {
+    return this.coins.filter((coin) => {
+      return coin.name.toLowerCase().indexOf(coinInput.toLowerCase()) === 0;
+    });
   }
 
   addCoin() {
