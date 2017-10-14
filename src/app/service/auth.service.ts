@@ -34,14 +34,14 @@ export class AuthService {
 
         this.lock.getUserInfo(authResult.accessToken, (error, profile) => {
           if(error) {
-            // do somthing
+            console.log(error);
+            // handle this
           } else {
             localStorage.setItem('profile', JSON.stringify(profile));
+            this.setSession(authResult);
+            this.router.navigate(['/dashboard']);
           }
         });
-
-        this.setSession(authResult);
-        this.router.navigate(['/dashboard']);
       }
     });
     this.lock.on('authorization_error', (err) => {
