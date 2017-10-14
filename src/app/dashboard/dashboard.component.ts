@@ -19,9 +19,13 @@ export class DashboardComponent implements OnInit {
   filteredCoins: Observable<string[]>;
   addCoinObject: FormGroup;
   access_token: string;
-  profile: Object;
+  profile: Object = {};
   assets: Array<Object> = [];
   validCoin: boolean = false;
+  portfolioValue: any;
+  totalProfits: number = 0;
+  totalInvestment: any;
+  loading: boolean = true;
   numberMask = createNumberMask({
     prefix: '',
     includeThousandsSeparator: true,
@@ -57,6 +61,7 @@ export class DashboardComponent implements OnInit {
       this.filteredCoins = this.addCoinObject.get('coin').valueChanges
         .startWith(null)
         .map(coinInput => coinInput ? this.filterCoins(coinInput) : this.coins.slice());
+        this.getAccessToken();
     });
   }
 
@@ -83,19 +88,50 @@ export class DashboardComponent implements OnInit {
       console.log(data);
       if(data['user_metadata'].assets) {
         this.assets = data['user_metadata'].assets;
+        this.assetMath();
       }
     });
   }
 
+  assetMath() {
+    this.assets.forEach((asset) => {
+
+      this.coins.forEach((coin) => {
+        if(asset['coin'] === coin.name) {
+          asset['price'] = parseInt(coin.price_usd);
+        }
+      });
+    });
+
+    this.totalInvestment = this.assets.reduce((a, b) => {
+      return a + b['cost'];
+    }, 0);
+    console.log(this.totalInvestment);
+
+    this.portfolioValue = this.assets.reduce((a, b) => {
+      return a + b['price'];
+    }, 0);
+    console.log(this.portfolioValue);
+
+    this.totalProfits = this.portfolioValue - this.totalInvestment;
+    console.log(this.totalInvestment);
+
+    console.log(this.assets);
+
+    this.loading = false;
+  }
+
   coinChange(coinInput) {
     console.log(coinInput);
-    let searchCoin = this.coins.filter((coin) => {
-      return coin.name.toLowerCase() === coinInput.toLowerCase();
-    });
-    if(searchCoin.length === 1) {
-      this.validCoin = true;
-    } else {
-      this.validCoin = false;
+    if(coinInput) {
+      let searchCoin = this.coins.filter((coin) => {
+        return coin.name.toLowerCase() === coinInput.toLowerCase();
+      });
+      if(searchCoin.length === 1) {
+        this.validCoin = true;
+      } else {
+        this.validCoin = false;
+      }
     }
   }
 
@@ -107,13 +143,22 @@ export class DashboardComponent implements OnInit {
 
   addCoin() {
     console.log(this.addCoinObject.value);
-    this.assets.push(this.addCoinObject.value)
+    let addCoinObject = {
+      coin: this.addCoinObject.value.coin,
+      amount: parseFloat(this.addCoinObject.value.amount.replace(/,/g, '')),
+      cost: parseFloat(this.addCoinObject.value.cost.replace(/,/g, '')),
+    }
+    console.log(addCoinObject);
+    this.assets.push(addCoinObject);
 
     this.http.patch(`https://${AUTH_CONFIG.domain}/api/v2/users/${this.profile['sub']}`, { user_metadata: { assets: this.assets } }, {
       headers: new HttpHeaders().set('content-type', 'application/json').set('authorization', `Bearer ${this.access_token}`)
     }).subscribe((data) => {
+      this.assets = data['user_metadata'].assets;
+      this.validCoin = false;
       this.addCoinObject.reset();
       this.addCoinObject.updateValueAndValidity();
+      this.assetMath();
       console.log(data);
     });
   }

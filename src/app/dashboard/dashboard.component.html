@@ -23,9 +23,15 @@
   <button md-raised-button color="primary" *ngIf="addCoinObject.get('coin').valid && addCoinObject.get('amount').valid && addCoinObject.get('cost').valid">Add</button>
 </form>
 
-<ng-container *ngIf="assets.length">
+<ng-container *ngIf="assets.length && !loading">
   <h1>Your assets</h1>
 
-  <p *ngFor="let asset of assets">Bought {{ asset.amount }} {{ asset.coin }} @${{ asset.cost }}</p>
+  <p *ngFor="let asset of assets">Bought {{ asset.amount }} {{ asset.coin }} @{{ asset.cost | currency:'USD':true }}</p>
+
+  <h1>Portfolio</h1>
+
+  <p>Total Investment: {{ totalInvestment | currency:'USD':true }}</p>
+  <p>Total Profits: {{ totalProfits | currency:'USD':true }}</p>
+  <p>Portfolio Value: {{ portfolioValue | currency:'USD':true }}</p>
 
 </ng-container>
