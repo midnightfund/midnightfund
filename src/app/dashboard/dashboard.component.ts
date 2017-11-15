@@ -103,14 +103,22 @@ export class DashboardComponent implements OnInit {
       });
     });
 
+    console.log(this.assets);
+
+
+    // profits: portfolioValue - cost
+    // portfolioValue: current price x amount of coin you have
+
+    // need to times the cost by each coin
     this.totalInvestment = this.assets.reduce((a, b) => {
       return a + b['cost'];
     }, 0);
     console.log(this.totalInvestment);
 
-    this.portfolioValue = this.assets.reduce((a, b) => {
-      return a + b['price'];
-    }, 0);
+    // this.portfolioValue = this.assets.reduce((a, b) => {
+    //   return a + b['price'];
+    // }, 0);
+    this.portfolioValue = this.assets[0]['price'] * this.assets[0]['amount'];
     console.log(this.portfolioValue);
 
     this.totalProfits = this.portfolioValue - this.totalInvestment;
@@ -122,7 +130,6 @@ export class DashboardComponent implements OnInit {
   }
 
   coinChange(coinInput) {
-    console.log(coinInput);
     if(coinInput) {
       let searchCoin = this.coins.filter((coin) => {
         return coin.name.toLowerCase() === coinInput.toLowerCase();

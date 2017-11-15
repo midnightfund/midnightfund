@@ -26,7 +26,7 @@
 <ng-container *ngIf="assets.length && !loading">
   <h1>Your assets</h1>
 
-  <p *ngFor="let asset of assets">Bought {{ asset.amount }} {{ asset.coin }} @{{ asset.cost | currency:'USD':true }}</p>
+  <p *ngFor="let asset of assets">Bought {{ asset.amount }} {{ asset.coin }} for {{ asset.cost | currency:'USD':true }} | Profit {{ asset.price - ( asset.cost * asset.amount ) }}</p>
 
   <h1>Portfolio</h1>
 

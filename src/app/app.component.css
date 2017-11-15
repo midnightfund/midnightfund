@@ -1,0 +1,17 @@
+md-toolbar {
+  background-color: #272727;
+}
+
+md-toolbar.header {
+  position: fixed;
+  top: 0;
+  z-index: 1;
+}
+
+md-toolbar .mat-raised-button {
+  color: #272727;
+}
+
+md-toolbar button, md-toolbar a {
+  color: #FAFAFA;
+}

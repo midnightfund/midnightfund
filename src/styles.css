@@ -1,26 +1,66 @@
 /* You can add global styles to this file, and also import other style files */
 
-.auth0-lock-input {
-  font-size: 16px !important;
+/* Globals */
+
+body {
+  margin: 0;
+  background: #272727;
 }
+
+h1, h2, h3, h4, h5, h6 {
+  margin-top: 0;
+}
+
+img {
+  width: 100%;
+}
+
+.full-width {
+  width: 100%;
+}
+
+/* Header */
 
 .spacer {
   flex: 1 1 auto;
 }
 
+/* Main */
+
+
+
+
+/* Footer */
+
+
+
+/* Grid */
+
 .row {
   display: flex;
-  align-items: baseline;
 }
 
 .column1 {
   flex: 1;
 }
 
+.column2 {
+  flex: 2;
+}
+
+/* Material Overrides */
+
 md-form-field {
   width: 100% !important;
 }
 
+/* Auth0 Overrides */
+
+.auth0-lock-input {
+  font-size: 16px !important;
+}
+
+/* Break Points */
 
 @media (max-width: 800px) {
   .row {

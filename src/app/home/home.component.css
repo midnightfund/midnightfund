@@ -1,0 +1,36 @@
+.intro-background {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.intro-text {
+  text-align: center;
+}
+
+.intro-text h1, .intro-text p {
+  color: #FAFAFA;
+}
+
+.crypto-tracker {
+  background-color: #465C69;
+}
+
+.crypto-tracker .column1 {
+  padding: 40px;
+}
+
+.fund {
+  padding: 40px;
+  text-align: center;
+  background-color: #A0ACAD;
+}
+
+.trading-ai {
+  background-color: #FAFAFA;
+}
+
+.trading-ai .column1 {
+  padding: 40px;
+}

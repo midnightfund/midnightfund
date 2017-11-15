@@ -1,9 +1,18 @@
-<md-toolbar>
+<md-toolbar class="header">
   <button md-button>MidnightFund</button>
 
   <span class="spacer"></span>
-  <button *ngIf="!auth.isAuthenticated()" (click)="auth.login()" md-button>Login / Sign Up</button>
+  <button *ngIf="!auth.isAuthenticated()" (click)="auth.login()" md-raised-button>Try Now</button>
+  <button *ngIf="!auth.isAuthenticated()" (click)="auth.login()" md-button>Login</button>
   <button *ngIf="auth.isAuthenticated()" (click)="auth.logout()" md-button>Sign Out</button>
 </md-toolbar>
 
 <router-outlet></router-outlet>
+
+<md-toolbar>
+  <button md-button>MidnightFund</button>
+  <span class="spacer"></span>
+  <a md-icon-button><i class="fa fa-facebook" aria-hidden="true"></i></a>
+  <a md-icon-button><i class="fa fa-twitter" aria-hidden="true"></i></a>
+  <a md-icon-button><i class="fa fa-medium" aria-hidden="true"></i></a>
+</md-toolbar>
