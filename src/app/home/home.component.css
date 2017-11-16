@@ -17,6 +17,10 @@
   background-color: #465C69;
 }
 
+.crypto-tracker h2, .crypto-tracker p {
+  color: #FAFAFA;
+}
+
 .crypto-tracker .column1 {
   padding: 40px;
 }
@@ -27,10 +31,18 @@
   background-color: #A0ACAD;
 }
 
+.fund h2, .fund p {
+  color: #FAFAFA;
+}
+
 .trading-ai {
   background-color: #FAFAFA;
 }
 
-.trading-ai .column1 {
+.trading-ai > .row > .column1 {
   padding: 40px;
+}
+
+.column-align {
+  align-self: center;
 }

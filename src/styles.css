@@ -2,6 +2,12 @@
 
 /* Globals */
 
+@import url('https://fonts.googleapis.com/css?family=Roboto|Roboto+Mono');
+
+* {
+  font-family: 'Roboto Mono', monospace;
+}
+
 body {
   margin: 0;
   background: #272727;
@@ -9,6 +15,31 @@ body {
 
 h1, h2, h3, h4, h5, h6 {
   margin-top: 0;
+  font-family: 'Roboto', sans-serif;
+}
+
+h1 {
+  font-size: 40px;
+}
+
+h2 {
+  font-size: 30px;
+}
+
+p, button, a, input, label {
+  font-size: 20px !important;
+}
+
+input.mat-input-element {
+    margin-top: .2em;
+}
+
+.mat-form-field {
+  line-height: inherit;
+}
+
+button {
+  line-height: 40px;
 }
 
 img {
@@ -48,6 +79,21 @@ img {
   flex: 2;
 }
 
+.column-margin {
+  margin-left: 16px;
+  margin-right: 16px;
+}
+
+.column-margin:first-child {
+  margin-right: 16px;
+  margin-left: 0;
+}
+
+.column-margin:last-child {
+  margin-left: 16px;
+  margin-right: 0;
+}
+
 /* Material Overrides */
 
 md-form-field {
@@ -65,5 +111,9 @@ md-form-field {
 @media (max-width: 800px) {
   .row {
     display: block;
+  }
+
+  .column-margin {
+    margin: 0 !important;
   }
 }
