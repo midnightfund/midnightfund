@@ -10,7 +10,7 @@
 
 body {
   margin: 0;
-  background: #272727;
+  /*background: #272727;*/
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -40,6 +40,10 @@ input.mat-input-element {
 
 button {
   line-height: 40px;
+}
+
+.button-align {
+  align-self: center;
 }
 
 img {

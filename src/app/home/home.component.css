@@ -3,6 +3,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: #272727;
 }
 
 .intro-text {
@@ -41,8 +42,4 @@
 
 .trading-ai > .row > .column1 {
   padding: 40px;
-}
-
-.column-align {
-  align-self: center;
 }

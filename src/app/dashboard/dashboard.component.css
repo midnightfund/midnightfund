@@ -1,0 +1,13 @@
+form {
+  margin-top: 64px;
+}
+
+button {
+  width: 100%;
+}
+
+@media (max-width: 600px) {
+  form {
+    margin-top: 56px;
+  }
+}

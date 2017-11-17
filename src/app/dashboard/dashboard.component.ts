@@ -19,12 +19,10 @@ export class DashboardComponent implements OnInit {
   filteredCoins: Observable<string[]>;
   addCoinObject: FormGroup;
   access_token: string;
-  profile: Object = {};
-  assets: Array<Object> = [];
+  profile: object = {};
+  assets: Array<object> = [];
   validCoin: boolean = false;
   portfolioValue: any;
-  totalProfits: number = 0;
-  totalInvestment: any;
   loading: boolean = true;
   numberMask = createNumberMask({
     prefix: '',
@@ -41,15 +39,12 @@ export class DashboardComponent implements OnInit {
   constructor(public http: HttpClient, fb: FormBuilder) {
     this.addCoinObject = fb.group({
       'coin': [null, Validators.required],
-      'amount': [null, Validators.required],
-      'cost': [null, Validators.required],
+      'amount': [null, Validators.required]
     });
     this.profile = JSON.parse(localStorage.getItem('profile'));
   }
 
   ngOnInit() {
-    console.log(this.profile);
-    console.log(this.addCoinObject);
     this.getCoins();
     this.getAccessToken();
   }
@@ -94,36 +89,22 @@ export class DashboardComponent implements OnInit {
   }
 
   assetMath() {
-    this.assets.forEach((asset) => {
-
-      this.coins.forEach((coin) => {
-        if(asset['coin'] === coin.name) {
-          asset['price'] = parseInt(coin.price_usd);
-        }
-      });
-    });
 
     console.log(this.assets);
 
+    this.assets.forEach((asset) => {
+      let price = this.coins.filter((coin) => {
+        return asset['coin'] === coin.name
+      });
 
-    // profits: portfolioValue - cost
-    // portfolioValue: current price x amount of coin you have
+      asset['value'] = parseFloat(price[0].price_usd) * asset['amount'];
+    });
 
-    // need to times the cost by each coin
-    this.totalInvestment = this.assets.reduce((a, b) => {
-      return a + b['cost'];
+    this.portfolioValue = this.assets.reduce((total, coin) => {
+      return total + coin['value'];
     }, 0);
-    console.log(this.totalInvestment);
 
-    // this.portfolioValue = this.assets.reduce((a, b) => {
-    //   return a + b['price'];
-    // }, 0);
-    this.portfolioValue = this.assets[0]['price'] * this.assets[0]['amount'];
     console.log(this.portfolioValue);
-
-    this.totalProfits = this.portfolioValue - this.totalInvestment;
-    console.log(this.totalInvestment);
-
     console.log(this.assets);
 
     this.loading = false;
@@ -148,16 +129,23 @@ export class DashboardComponent implements OnInit {
     });
   }
 
+  deleteCoin(asset: object) {
+    this.assets.splice(this.assets.indexOf(asset), 1);
+    this.updateCoins();
+  }
+
   addCoin() {
     console.log(this.addCoinObject.value);
     let addCoinObject = {
       coin: this.addCoinObject.value.coin,
       amount: parseFloat(this.addCoinObject.value.amount.replace(/,/g, '')),
-      cost: parseFloat(this.addCoinObject.value.cost.replace(/,/g, '')),
     }
     console.log(addCoinObject);
     this.assets.push(addCoinObject);
+    this.updateCoins();
+  }
 
+  updateCoins() {
     this.http.patch(`https://${AUTH_CONFIG.domain}/api/v2/users/${this.profile['sub']}`, { user_metadata: { assets: this.assets } }, {
       headers: new HttpHeaders().set('content-type', 'application/json').set('authorization', `Bearer ${this.access_token}`)
     }).subscribe((data) => {

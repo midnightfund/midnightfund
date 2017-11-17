@@ -1,9 +1,10 @@
 <md-toolbar class="header">
-  <button md-button>MidnightFund</button>
+  <a [routerLink]="['/']" md-button>MidnightFund</a>
 
   <span class="spacer"></span>
   <button *ngIf="!auth.isAuthenticated()" (click)="auth.login()" md-raised-button>Try Now</button>
-  <button *ngIf="!auth.isAuthenticated()" (click)="auth.login()" md-button>Login</button>
+  <button *ngIf="!auth.isAuthenticated()" (click)="auth.login()" md-button>Sign Up / Login</button>
+  <a [routerLink]="['/dashboard']" *ngIf="auth.isAuthenticated()" md-raised-button>Dashboard</a>
   <button *ngIf="auth.isAuthenticated()" (click)="auth.logout()" md-button>Sign Out</button>
 </md-toolbar>
 

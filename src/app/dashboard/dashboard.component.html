@@ -11,27 +11,21 @@
   </div>
   <div class="column1">
     <md-form-field *ngIf="validCoin">
-      <input mdInput placeholder="How much {{ addCoinObject.get('coin').value }} did you buy?" [formControl]="addCoinObject.controls['amount']" [textMask]="{ mask: numberMask }">
+      <input mdInput placeholder="How much {{ addCoinObject.get('coin').value }} do you have?" [formControl]="addCoinObject.controls['amount']" [textMask]="{ mask: numberMask }">
     </md-form-field>
   </div>
-  <div class="column1">
-    <md-form-field *ngIf="addCoinObject.get('amount').valid">
-      <span mdPrefix>$ &nbsp;</span>
-      <input mdInput placeholder="How much did your {{ addCoinObject.get('amount').value + ' ' + addCoinObject.get('coin').value }} cost?" [formControl]="addCoinObject.controls['cost']" [textMask]="{ mask: dollarMask }">
-    </md-form-field>
+  <div class="column1 button-align">
+    <button md-raised-button color="primary" *ngIf="addCoinObject.get('coin').valid && addCoinObject.get('amount').valid">Add</button>
   </div>
-  <button md-raised-button color="primary" *ngIf="addCoinObject.get('coin').valid && addCoinObject.get('amount').valid && addCoinObject.get('cost').valid">Add</button>
 </form>
 
 <ng-container *ngIf="assets.length && !loading">
   <h1>Your assets</h1>
 
-  <p *ngFor="let asset of assets">Bought {{ asset.amount }} {{ asset.coin }} for {{ asset.cost | currency:'USD':true }} | Profit {{ asset.price - ( asset.cost * asset.amount ) }}</p>
+  <p *ngFor="let asset of assets">{{ asset.amount }} {{ asset.coin }} ({{ asset.value | currency:'USD':true }}) <i class="fa fa-trash-o" aria-hidden="true" (click)="deleteCoin(asset)"></i></p>
 
   <h1>Portfolio</h1>
 
-  <p>Total Investment: {{ totalInvestment | currency:'USD':true }}</p>
-  <p>Total Profits: {{ totalProfits | currency:'USD':true }}</p>
   <p>Portfolio Value: {{ portfolioValue | currency:'USD':true }}</p>
 
 </ng-container>
