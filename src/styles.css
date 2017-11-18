@@ -54,6 +54,18 @@ img {
   width: 100%;
 }
 
+i.fa {
+  width: 24px;
+}
+
+.mat-icon-button .mat-button-wrapper>* {
+  vertical-align: unset !important;
+}
+
+.text-center {
+  text-align: center;
+}
+
 /* Header */
 
 .spacer {
@@ -70,6 +82,10 @@ img {
 
 
 /* Grid */
+
+.wrapper {
+  margin: 16px;
+}
 
 .row {
   display: flex;

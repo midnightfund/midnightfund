@@ -1,7 +1,7 @@
 <form class="row" (ngSubmit)="addCoin()">
-  <div class="column1">
+  <div class="column1 column-margin">
     <md-form-field>
-      <input mdInput placeholder="Add Coin" [mdAutocomplete]="auto" [formControl]="addCoinObject.controls['coin']" (ngModelChange)="coinChange($event)">
+      <input mdInput placeholder="Add a Coin" [mdAutocomplete]="auto" [formControl]="addCoinObject.controls['coin']" (ngModelChange)="coinChange($event)">
       <md-autocomplete #auto="mdAutocomplete">
         <md-option *ngFor="let coin of filteredCoins | async" [value]="coin.name">
           {{ coin.name + ' $' + coin.price_usd }}
@@ -9,23 +9,31 @@
       </md-autocomplete>
     </md-form-field>
   </div>
-  <div class="column1">
+  <div class="column1 column-margin">
     <md-form-field *ngIf="validCoin">
       <input mdInput placeholder="How much {{ addCoinObject.get('coin').value }} do you have?" [formControl]="addCoinObject.controls['amount']" [textMask]="{ mask: numberMask }">
     </md-form-field>
   </div>
-  <div class="column1 button-align">
-    <button md-raised-button color="primary" *ngIf="addCoinObject.get('coin').valid && addCoinObject.get('amount').valid">Add</button>
+  <div class="column1 column-margin button-align">
+    <button md-raised-button color="primary" *ngIf="validCoin && addCoinObject.get('amount').value * 1 !== 0">Add</button>
   </div>
 </form>
 
-<ng-container *ngIf="assets.length && !loading">
-  <h1>Your assets</h1>
-
-  <p *ngFor="let asset of assets">{{ asset.amount }} {{ asset.coin }} ({{ asset.value | currency:'USD':true }}) <i class="fa fa-trash-o" aria-hidden="true" (click)="deleteCoin(asset)"></i></p>
-
-  <h1>Portfolio</h1>
-
-  <p>Portfolio Value: {{ portfolioValue | currency:'USD':true }}</p>
-
-</ng-container>
+<div class="wrapper" *ngIf="assets.length && !loading">
+  <div class="row">
+    <div class="column1">
+      <canvas baseChart
+        [data]="doughnutChartData"
+        [labels]="doughnutChartLabels"
+        [chartType]="doughnutChartType"
+        [options]="options"
+        (chartHover)="chartHovered($event)"
+        (chartClick)="chartClicked($event)">
+      </canvas>
+      <p *ngFor="let asset of assets" class="text-center">{{ asset.amount }} {{ asset.coin }} ({{ asset.value | currency:'USD':true }})<button md-icon-button (click)="deleteCoin(asset)"><i class="fa fa-trash-o" aria-hidden="true"></i></button></p>
+    </div>
+    <div class="column2">
+      <h1>Portfolio Value: {{ portfolioValue | currency:'USD':true }}</h1>
+    </div>
+  </div>
+</div>

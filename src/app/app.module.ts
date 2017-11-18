@@ -20,6 +20,8 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 
 import { CustomFormsModule } from 'ng2-validation';
 import { TextMaskModule } from 'angular2-text-mask';
+import { ChartsModule } from 'ng2-charts';
+import { CurrencyPipe } from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -37,9 +39,10 @@ import { TextMaskModule } from 'angular2-text-mask';
     CustomFormsModule,
     TextMaskModule,
     HttpClientModule,
+    ChartsModule,
     RouterModule.forRoot(ROUTES)
   ],
-  providers: [AuthService, AuthGuardService],
+  providers: [AuthService, AuthGuardService, CurrencyPipe],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
