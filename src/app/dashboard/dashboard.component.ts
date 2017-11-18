@@ -6,6 +6,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import createNumberMask from 'text-mask-addons/dist/createNumberMask';
 import { CurrencyPipe } from '@angular/common';
 import { BaseChartDirective } from 'ng2-charts/ng2-charts';
+import { Color } from 'ng2-charts';
 
 import 'rxjs/add/operator/startWith';
 import 'rxjs/add/operator/map';
@@ -69,7 +70,7 @@ export class DashboardComponent implements OnInit {
   }
 
   getCoins() {
-    this.http.get('https://api.coinmarketcap.com/v1/ticker/').subscribe(data => {
+    this.http.get('https://api.coinmarketcap.com/v1/ticker/?limit=2000').subscribe(data => {
       this.coins = data;
       console.log(this.coins);
       this.filteredCoins = this.addCoinObject.get('coin').valueChanges
@@ -113,11 +114,12 @@ export class DashboardComponent implements OnInit {
       if(this.chart) {
         this.chart.chart.data.datasets[0].data = [];
         this.chart.chart.data.labels = [];
+        this.chart.chart.data.datasets[0].backgroundColor = [];
         this.chart.chart.update();
       }
     });
 
-    this.assets.forEach((asset) => {
+    this.assets.forEach((asset, index) => {
       let price = this.coins.filter((coin) => {
         return asset['coin'] === coin.name
       });
@@ -127,6 +129,7 @@ export class DashboardComponent implements OnInit {
       setTimeout(() => {
         this.chart.chart.data.datasets[0].data.push(asset['value']);
         this.chart.chart.data.labels.push(asset['coin']);
+        this.chart.chart.data.datasets[0].backgroundColor.push(asset['color']);
         this.chart.chart.update();
       });
     });
@@ -172,6 +175,7 @@ export class DashboardComponent implements OnInit {
       let addCoinObject = {
         coin: this.addCoinObject.value.coin,
         amount: parseFloat(this.addCoinObject.value.amount.replace(/,/g, '')),
+        color: "#"+((1<<24)*Math.random()|0).toString(16)
       }
       this.assets.push(addCoinObject);
     }

@@ -8,6 +8,32 @@ form button {
   width: 100%;
 }
 
+.refresh-button {
+  margin: auto;
+  display: block;
+}
+
+h3 {
+  margin-bottom: 0;
+  font-size: 30px;
+}
+
+.portfolio-value {
+  font-size: 70px;
+}
+
+.no-coins {
+  margin-top: 80px;
+  margin-bottom: 80px;
+}
+
+@media (max-width: 800px) {
+  h3 {
+    margin-top: 60px;
+    font-size: 30px;
+  }
+}
+
 @media (max-width: 600px) {
   form {
     margin-top: 56px;
@@ -16,6 +42,5 @@ form button {
 
 canvas {
   width: 100% !important;
-  /*max-width: 800px;*/
   height: auto !important;
 }

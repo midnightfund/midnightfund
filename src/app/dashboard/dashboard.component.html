@@ -26,14 +26,20 @@
         [data]="doughnutChartData"
         [labels]="doughnutChartLabels"
         [chartType]="doughnutChartType"
-        [options]="options"
-        (chartHover)="chartHovered($event)"
-        (chartClick)="chartClicked($event)">
+        [colors]="bidDistributionStatColors"
+        [options]="options">
       </canvas>
-      <p *ngFor="let asset of assets" class="text-center">{{ asset.amount }} {{ asset.coin }} ({{ asset.value | currency:'USD':true }})<button md-icon-button (click)="deleteCoin(asset)"><i class="fa fa-trash-o" aria-hidden="true"></i></button></p>
+      <p *ngFor="let asset of assets" class="text-center" [ngStyle]="{'color': asset.color}">{{ asset.amount }} {{ asset.coin }} ({{ asset.value | currency:'USD':true }})<button md-icon-button (click)="deleteCoin(asset)"><i class="fa fa-trash-o" aria-hidden="true"></i></button></p>
+
+      <button md-button (click)="updateCoins()" class="refresh-button"><i class="fa fa-refresh" aria-hidden="true"></i> Refresh Coins</button>
     </div>
     <div class="column2">
-      <h1>Portfolio Value: {{ portfolioValue | currency:'USD':true }}</h1>
+      <h3>Portfolio Value</h3>
+      <h1 class="portfolio-value">{{ portfolioValue | currency:'USD':true }}</h1>
     </div>
   </div>
+</div>
+<div class="wrapper no-coins" *ngIf="!assets.length && !loading">
+  <h1>Welcome to your coin tracker!</h1>
+  <p>Add a coin, followed by the amount you have to see your dashboard come to life!</p>
 </div>
