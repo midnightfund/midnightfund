@@ -10,7 +10,6 @@
 
 body {
   margin: 0;
-  /*background: #272727;*/
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -31,7 +30,7 @@ p, button, a, input, label {
 }
 
 input.mat-input-element {
-    margin-top: .2em;
+  margin-top: .2em;
 }
 
 .mat-form-field {

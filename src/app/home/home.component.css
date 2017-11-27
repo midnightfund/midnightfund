@@ -43,3 +43,21 @@
 .trading-ai > .row > .column1 {
   padding: 40px;
 }
+
+@media (max-width: 800px) {
+
+}
+
+@media (max-width: 600px) {
+  .intro-text h1 {
+    font-size: 30px;
+  }
+
+  .trading-ai .column1:first-child {
+    padding-bottom: 0 !important;
+  }
+
+  .crypto-tracker .column1:first-child {
+    padding-bottom: 0 !important;
+  }
+}

@@ -6,7 +6,7 @@
       <input mdInput placeholder="Add a Coin" [mdAutocomplete]="auto" [formControl]="addCoinObject.controls['coin']" (ngModelChange)="coinChange($event)">
       <md-autocomplete #auto="mdAutocomplete">
         <md-option *ngFor="let coin of filteredCoins | async" [value]="coin.name">
-          {{ coin.name + ' $' + coin.price_usd }}
+          {{ coin.name + " " + (coin.price_usd | currency:'USD':true) }}
         </md-option>
       </md-autocomplete>
     </md-form-field>
@@ -48,6 +48,22 @@
       </canvas>
     </div>
   </div>
+  <!-- Features to come.
+
+  Manage your crypto assets in one place.
+
+  Make text or email price alerts
+
+  yearly, monthly and Hourly charts
+
+  Profit / Loss data
+
+  Portfolio graph
+
+  Percent changes
+
+  Found a bug or have a feature request? Let us know on our github!
+  -->
 </div>
 <div class="wrapper no-coins" *ngIf="!assets.length && !pageLoading">
   <h1>Welcome to your coin tracker!</h1>

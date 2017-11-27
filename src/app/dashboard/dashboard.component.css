@@ -50,6 +50,10 @@ h3 {
   form {
     margin-top: 56px;
   }
+
+  .portfolio-value {
+    font-size: 50px;
+  }
 }
 
 #doughnutChart {

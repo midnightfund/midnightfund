@@ -8,10 +8,34 @@ md-toolbar.header {
   z-index: 1;
 }
 
+.mobile-menu {
+  display: none;
+}
+
 md-toolbar .mat-raised-button {
   color: #272727;
 }
 
 md-toolbar button, md-toolbar a {
   color: #FAFAFA;
+}
+
+md-sidenav {
+  padding: 20px;
+}
+
+md-sidenav button, md-sidenav a {
+  display: block;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+@media (max-width: 800px) {
+  .mobile-menu {
+    display: block;
+  }
+
+  .desktop-menu {
+    display: none;
+  }
 }

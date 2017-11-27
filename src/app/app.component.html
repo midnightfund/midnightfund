@@ -1,19 +1,31 @@
-<md-toolbar class="header">
-  <a [routerLink]="['/']" md-button>MidnightFund</a>
+<md-sidenav-container class="example-container">
+  <md-toolbar class="header">
+    <a [routerLink]="['/']" md-button>MidnightFund</a>
 
-  <span class="spacer"></span>
-  <button *ngIf="!auth.isAuthenticated()" md-raised-button>Try Now</button>
-  <button *ngIf="!auth.isAuthenticated()" (click)="auth.login()" md-button>Sign Up / Login</button>
-  <a [routerLink]="['/dashboard']" *ngIf="auth.isAuthenticated()" md-raised-button>Dashboard</a>
-  <button *ngIf="auth.isAuthenticated()" (click)="auth.logout()" md-button>Sign Out</button>
-</md-toolbar>
+    <span class="spacer"></span>
+    <button *ngIf="!auth.isAuthenticated()" md-raised-button class="desktop-menu">Try Now</button>
+    <button *ngIf="!auth.isAuthenticated()" (click)="auth.login()" md-button class="desktop-menu">Sign Up / Login</button>
+    <a [routerLink]="['/dashboard']" *ngIf="auth.isAuthenticated()" md-raised-button class="desktop-menu">Dashboard</a>
+    <button *ngIf="auth.isAuthenticated()" (click)="auth.logout()" md-button class="desktop-menu">Sign Out</button>
+    <button md-icon-button (click)="sidenav.open()" class="mobile-menu">
+      <i class="fa fa-bars" aria-hidden="true"></i>
+    </button>
+  </md-toolbar>
+  <md-sidenav #sidenav>
+    <button *ngIf="!auth.isAuthenticated()" md-raised-button (click)="sidenav.close()">Try Now</button>
+    <button *ngIf="!auth.isAuthenticated()" (click)="auth.login()" md-button (click)="sidenav.close()">Sign Up / Login</button>
+    <a [routerLink]="['/dashboard']" *ngIf="auth.isAuthenticated()" md-raised-button (click)="sidenav.close()">Dashboard</a>
+    <button *ngIf="auth.isAuthenticated()" (click)="auth.logout()" md-button (click)="sidenav.close()">Sign Out</button>
+  </md-sidenav>
 
-<router-outlet></router-outlet>
+  <router-outlet></router-outlet>
 
-<md-toolbar>
-  <a [routerLink]="['/']" md-button>MidnightFund</a>
-  <span class="spacer"></span>
-  <a md-icon-button><i class="fa fa-facebook" aria-hidden="true"></i></a>
-  <a md-icon-button><i class="fa fa-twitter" aria-hidden="true"></i></a>
-  <a md-icon-button><i class="fa fa-medium" aria-hidden="true"></i></a>
-</md-toolbar>
+  <md-toolbar>
+    <a [routerLink]="['/']" md-button>MidnightFund</a>
+    <span class="spacer"></span>
+    <a md-icon-button><i class="fa fa-facebook" aria-hidden="true"></i></a>
+    <a md-icon-button><i class="fa fa-twitter" aria-hidden="true"></i></a>
+    <a md-icon-button><i class="fa fa-medium" aria-hidden="true"></i></a>
+  </md-toolbar>
+
+</md-sidenav-container>
