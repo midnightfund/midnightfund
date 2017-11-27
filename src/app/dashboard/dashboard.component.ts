@@ -133,12 +133,13 @@ export class DashboardComponent implements OnInit {
       headers: new HttpHeaders().set('content-type', 'application/json').set('authorization', `Bearer ${this.access_token}`)
     }).subscribe((data) => {
       console.log(data);
-      if(data['user_metadata'].assets && data['user_metadata'].assets.length) {
+
+      if(!data['user_metadata'] || !data['user_metadata'].assets || !data['user_metadata'].assets.length) {
+        this.pageLoading = false;
+      } else {
         this.assets = data['user_metadata'].assets;
         this.assetMath();
         this.assetGraph();
-      } else {
-        this.pageLoading = false;
       }
     });
   }
