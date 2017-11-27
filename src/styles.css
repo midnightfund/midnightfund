@@ -66,6 +66,14 @@ i.fa {
   text-align: center;
 }
 
+.text-right {
+  text-align: right;
+}
+
+.text-left {
+  text-align: left;
+}
+
 /* Header */
 
 .spacer {

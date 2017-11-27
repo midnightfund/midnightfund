@@ -6,7 +6,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import createNumberMask from 'text-mask-addons/dist/createNumberMask';
 import { CurrencyPipe } from '@angular/common';
 import { BaseChartDirective } from 'ng2-charts/ng2-charts';
-import { Color } from 'ng2-charts';
+import * as moment from 'moment';
 
 import 'rxjs/add/operator/startWith';
 import 'rxjs/add/operator/map';
@@ -18,8 +18,10 @@ import 'rxjs/add/operator/map';
 })
 export class DashboardComponent implements OnInit {
 
-  @ViewChild(BaseChartDirective) chart: BaseChartDirective;
+  @ViewChild('doughnutChart') doughnutChart: BaseChartDirective;
+  @ViewChild('lineChart') lineChart: BaseChartDirective;
   coins: any = [];
+  points: any = [];
   filteredCoins: Observable<string[]>;
   addCoinObject: FormGroup;
   access_token: string;
@@ -27,7 +29,10 @@ export class DashboardComponent implements OnInit {
   assets: Array<object> = [];
   validCoin: boolean = false;
   portfolioValue: any;
-  loading: boolean = true;
+  pageLoading: boolean = true;
+  coinLoading: boolean = false;
+  refreshLoading: boolean = false;
+  index: number = 0;
   numberMask = createNumberMask({
     prefix: '',
     includeThousandsSeparator: true,
@@ -56,6 +61,33 @@ export class DashboardComponent implements OnInit {
       }
     }
   }
+
+  public lineChartData:Array<any> = [{data: [], label: ''}];
+  public lineChartLabels:Array<any> = [];
+  public lineChartOptions:any = {
+    responsive: true,
+    maintainAspectRatio: true,
+    tooltips: {
+      callbacks: {
+        label: (tooltipItem, data) => {
+          return data.datasets[tooltipItem.datasetIndex].label + ' ' + this.currencyPipe.transform(data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index], 'USD', true);
+        }
+      }
+    },
+    scales: {
+      yAxes: [
+        {
+          ticks: {
+            callback: (label, index, labels) => {
+              return this.currencyPipe.transform(label, 'USD', true, '1.0-0');
+            }
+          }
+        }
+      ]
+    }
+  };
+  public lineChartLegend:boolean = false;
+  public lineChartType:string = 'line';
 
   constructor(public http: HttpClient, fb: FormBuilder, private currencyPipe: CurrencyPipe) {
     this.addCoinObject = fb.group({
@@ -101,9 +133,89 @@ export class DashboardComponent implements OnInit {
       headers: new HttpHeaders().set('content-type', 'application/json').set('authorization', `Bearer ${this.access_token}`)
     }).subscribe((data) => {
       console.log(data);
-      if(data['user_metadata'].assets) {
+      if(data['user_metadata'].assets && data['user_metadata'].assets.length) {
         this.assets = data['user_metadata'].assets;
         this.assetMath();
+        this.assetGraph();
+      } else {
+        this.pageLoading = false;
+      }
+    });
+  }
+
+  assetGraph() {
+
+    this.index = 0;
+
+    setTimeout(() => {
+      if(this.lineChart) {
+        this.lineChart.chart.data.datasets = [];
+        this.lineChart.chart.data.labels = [];
+        this.lineChart.chart.update();
+      }
+    });
+
+    if(this.assets.length) {
+      this.assetDraw();
+    }
+  }
+
+  assetDraw() {
+    var asset = this.assets[this.index];
+    let days = [];
+    let prices = [];
+    this.http.get(`https://cors-anywhere.herokuapp.com/https://graphs.coinmarketcap.com/currencies/${asset['coin'].replace(/ /g, '-')}/`).subscribe((data) => {
+
+      console.log(data);
+
+      // single coin graph?
+      // all coins graph?
+      // portfolio value graph?
+
+      this.points = data['price_usd'].reverse();
+
+      for(let point of this.points)  {
+        if(!days.includes(moment(point[0]).format('dddd'))) {
+          days.push(moment(point[0]).format('dddd'));
+          prices.push(point[1]);
+        }
+        if(days.length === 7) {
+          break
+        }
+      }
+
+      days = days.reverse();
+      prices = prices.reverse();
+
+      this.lineChart.chart.data.datasets.push({
+        backgroundColor: 'transparent',
+        borderColor: asset['color'],
+        data: [],
+        label: asset['coin'],
+        pointBackgroundColor: asset['color'],
+        pointBorderColor: '#fff',
+        pointHoverBackgroundColor: '#fff',
+        pointHoverBorderColor: asset['color']
+      });
+      this.lineChart.chart.update();
+
+      days.forEach((day, index) => {
+        this.lineChart.chart.data.datasets[this.index].data.push(prices[index]);
+        if(this.lineChart.chart.data.labels.length < 7) {
+          this.lineChart.chart.data.labels.push(day);
+        }
+
+        this.lineChart.chart.update();
+      });
+
+      this.index++;
+
+      if(this.index < this.assets.length) {
+        this.assetDraw();
+      } else {
+        this.pageLoading = false;
+        this.coinLoading = false;
+        this.refreshLoading = false;
       }
     });
   }
@@ -111,11 +223,11 @@ export class DashboardComponent implements OnInit {
   assetMath() {
 
     setTimeout(() => {
-      if(this.chart) {
-        this.chart.chart.data.datasets[0].data = [];
-        this.chart.chart.data.labels = [];
-        this.chart.chart.data.datasets[0].backgroundColor = [];
-        this.chart.chart.update();
+      if(this.doughnutChart) {
+        this.doughnutChart.chart.data.datasets[0].data = [];
+        this.doughnutChart.chart.data.labels = [];
+        this.doughnutChart.chart.data.datasets[0].backgroundColor = [];
+        this.doughnutChart.chart.update();
       }
     });
 
@@ -127,18 +239,16 @@ export class DashboardComponent implements OnInit {
       asset['value'] = parseFloat(price[0].price_usd) * asset['amount'];
 
       setTimeout(() => {
-        this.chart.chart.data.datasets[0].data.push(asset['value']);
-        this.chart.chart.data.labels.push(asset['coin']);
-        this.chart.chart.data.datasets[0].backgroundColor.push(asset['color']);
-        this.chart.chart.update();
+        this.doughnutChart.chart.data.datasets[0].data.push(asset['value']);
+        this.doughnutChart.chart.data.labels.push(asset['coin']);
+        this.doughnutChart.chart.data.datasets[0].backgroundColor.push(asset['color']);
+        this.doughnutChart.chart.update();
       });
     });
 
     this.portfolioValue = this.assets.reduce((total, coin) => {
       return total + coin['value'];
     }, 0);
-
-    this.loading = false;
   }
 
   coinChange(coinInput) {
@@ -166,7 +276,7 @@ export class DashboardComponent implements OnInit {
   }
 
   addCoin() {
-
+    this.coinLoading = true;
     // check if asset exists
     if(this.assets.filter((asset) => { return asset['coin'] === this.addCoinObject.value.coin }).length) {
       // find asset in array add to amount
@@ -183,6 +293,11 @@ export class DashboardComponent implements OnInit {
     this.updateCoins();
   }
 
+  refreshCoins() {
+    this.refreshLoading = true;
+    this.updateCoins();
+  }
+
   updateCoins() {
     this.http.patch(`https://${AUTH_CONFIG.domain}/api/v2/users/${this.profile['sub']}`, { user_metadata: { assets: this.assets } }, {
       headers: new HttpHeaders().set('content-type', 'application/json').set('authorization', `Bearer ${this.access_token}`)
@@ -191,6 +306,7 @@ export class DashboardComponent implements OnInit {
       this.validCoin = false;
       this.addCoinObject.reset();
       this.assetMath();
+      this.assetGraph();
       console.log(data);
     });
   }

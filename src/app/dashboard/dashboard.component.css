@@ -1,3 +1,15 @@
+md-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+  height: 100vh;
+}
+
+.history {
+  margin-bottom: 0;
+}
+
 form {
   margin-top: 64px;
   padding: 16px;
@@ -40,7 +52,12 @@ h3 {
   }
 }
 
-canvas {
+#doughnutChart {
+  width: 100% !important;
+  height: auto !important;
+}
+
+#lineChart {
   width: 100% !important;
   height: auto !important;
 }
