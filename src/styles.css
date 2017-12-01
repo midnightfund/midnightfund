@@ -17,6 +17,10 @@ h1, h2, h3, h4, h5, h6 {
   font-family: 'Roboto', sans-serif;
 }
 
+.mat-drawer-content, .mat-drawer-container {
+  transform: none !important;
+}
+
 h1 {
   font-size: 40px;
 }

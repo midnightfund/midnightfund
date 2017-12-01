@@ -32,6 +32,7 @@ export class DashboardComponent implements OnInit {
   pageLoading: boolean = true;
   coinLoading: boolean = false;
   refreshLoading: boolean = false;
+  graphLoading: boolean = false;
   index: number = 0;
   numberMask = createNumberMask({
     prefix: '',
@@ -98,18 +99,7 @@ export class DashboardComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.getCoins();
-  }
-
-  getCoins() {
-    this.http.get('https://api.coinmarketcap.com/v1/ticker/?limit=2000').subscribe(data => {
-      this.coins = data;
-      console.log(this.coins);
-      this.filteredCoins = this.addCoinObject.get('coin').valueChanges
-        .startWith(null)
-        .map(coinInput => coinInput ? this.filterCoins(coinInput) : this.coins.slice());
-        this.getAccessToken();
-    });
+    this.getAccessToken();
   }
 
   getAccessToken() {
@@ -123,8 +113,18 @@ export class DashboardComponent implements OnInit {
     }).subscribe((data) => {
       console.log(data);
       this.access_token = data['access_token'];
+      this.getCoins();
+    });
+  }
 
-      this.getAssets();
+  getCoins() {
+    this.http.get('https://api.coinmarketcap.com/v1/ticker/?limit=2000').subscribe(data => {
+      this.coins = data;
+      console.log(this.coins);
+      this.filteredCoins = this.addCoinObject.get('coin').valueChanges
+        .startWith(null)
+        .map(coinInput => coinInput ? this.filterCoins(coinInput) : this.coins.slice());
+        this.getAssets();
     });
   }
 
@@ -217,6 +217,7 @@ export class DashboardComponent implements OnInit {
         this.pageLoading = false;
         this.coinLoading = false;
         this.refreshLoading = false;
+        this.graphLoading = false;
       }
     });
   }
@@ -272,12 +273,14 @@ export class DashboardComponent implements OnInit {
   }
 
   deleteCoin(asset: object) {
+    this.graphLoading = true;
     this.assets.splice(this.assets.indexOf(asset), 1);
     this.updateCoins();
   }
 
   addCoin() {
     this.coinLoading = true;
+    this.graphLoading = true;
     // check if asset exists
     if(this.assets.filter((asset) => { return asset['coin'] === this.addCoinObject.value.coin }).length) {
       // find asset in array add to amount
@@ -296,7 +299,8 @@ export class DashboardComponent implements OnInit {
 
   refreshCoins() {
     this.refreshLoading = true;
-    this.updateCoins();
+    this.graphLoading = true;
+    this.getCoins();
   }
 
   updateCoins() {

@@ -39,32 +39,34 @@
       <h3>Portfolio Value</h3>
       <h1 class="portfolio-value">{{ portfolioValue | currency:'USD':true }}</h1>
       <p class="text-right history">Last 7 Days</p>
-      <canvas baseChart #lineChart="base-chart" id="lineChart"
-        [datasets]="lineChartData"
-        [labels]="lineChartLabels"
-        [options]="lineChartOptions"
-        [legend]="lineChartLegend"
-        [chartType]="lineChartType">
-      </canvas>
+      <md-spinner *ngIf="graphLoading"></md-spinner>
+      <div [hidden]="graphLoading">
+        <canvas baseChart #lineChart="base-chart" id="lineChart"
+          [datasets]="lineChartData"
+          [labels]="lineChartLabels"
+          [options]="lineChartOptions"
+          [legend]="lineChartLegend"
+          [chartType]="lineChartType">
+        </canvas>
+      </div>
+      <div class="features">
+        <p>Our Vision for this dashboard is for you to be able to manage all your crypto currency in one beautiful place.</p>
+        <h2>Features to come</h2>
+        <ul>
+          <li>Price Alerts via Email / Text</li>
+          <li>Portfolio Value and Individual Coin Chart View</li>
+          <li>Yearly, Monthly and Hourly Chart View</li>
+          <li>Portfolio Value and Coin Percent Changes</li>
+          <li>Portfolio Value and Coin Profit / Loss Data</li>
+          <li>Buying and Selling via Coinbase / Bittrex</li>
+        </ul>
+        <p>Found a bug or have a feature request?</p>
+        <a href="https://github.com/midnightfund/issues/issues/new" md-raised-button color="primary" target="_blank">Let us know on our github!</a>
+      </div>
     </div>
   </div>
-  <!-- Features to come.
-
-  Manage your crypto assets in one place.
-
-  Make text or email price alerts
-
-  yearly, monthly and Hourly charts
-
-  Profit / Loss data
-
-  Portfolio graph
-
-  Percent changes
-
-  Found a bug or have a feature request? Let us know on our github!
-  -->
 </div>
+
 <div class="wrapper no-coins" *ngIf="!assets.length && !pageLoading">
   <h1>Welcome to your coin tracker!</h1>
   <p>Add a coin, followed by the amount you have to see your dashboard come to life!</p>
