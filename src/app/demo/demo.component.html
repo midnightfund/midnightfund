@@ -1,0 +1,77 @@
+<md-spinner *ngIf="pageLoading"></md-spinner>
+
+<form class="row" (ngSubmit)="addCoin()" *ngIf="!pageLoading">
+  <div class="column1 column-margin">
+    <md-form-field>
+      <input mdInput placeholder="Add a Coin" [mdAutocomplete]="auto" [formControl]="addCoinObject.controls['coin']" (ngModelChange)="coinChange($event)">
+      <md-autocomplete #auto="mdAutocomplete">
+        <md-option *ngFor="let coin of filteredCoins | async" [value]="coin.name">
+          {{ coin.name + " " + (coin.price_usd | currency:'USD':true) }}
+        </md-option>
+      </md-autocomplete>
+    </md-form-field>
+  </div>
+  <div class="column1 column-margin">
+    <md-form-field *ngIf="validCoin && addCoinObject.get('coin').value.length">
+      <input mdInput placeholder="How much {{ addCoinObject.get('coin').value }} do you have?" [formControl]="addCoinObject.controls['amount']" [textMask]="{ mask: numberMask }">
+    </md-form-field>
+  </div>
+  <div class="column1 column-margin button-align">
+    <button md-raised-button color="primary" *ngIf="validCoin && addCoinObject.get('amount').value * 1 !== 0" [disabled]="coinLoading"><ng-container *ngIf="!coinLoading">Add</ng-container><i class="fa fa-circle-o-notch fa-spin" aria-hidden="true" *ngIf="coinLoading"></i></button>
+  </div>
+</form>
+
+<div class="wrapper" *ngIf="assets.length" [hidden]="pageLoading">
+  <div class="row">
+    <div class="column1">
+      <canvas baseChart #doughnutChart="base-chart" id="doughnutChart"
+        [data]="doughnutChartData"
+        [labels]="doughnutChartLabels"
+        [chartType]="doughnutChartType"
+        [colors]="bidDistributionStatColors"
+        [options]="options">
+      </canvas>
+      <p *ngFor="let asset of assets" class="text-center" [ngStyle]="{'color': asset.color}">{{ asset.amount }} {{ asset.coin }} ({{ asset.value | currency:'USD':true }})<button md-icon-button (click)="deleteCoin(asset)"><i class="fa fa-trash-o" aria-hidden="true"></i></button></p>
+
+      <button md-button (click)="refreshCoins()" class="refresh-button" [disabled]="refreshLoading"><i class="fa fa-refresh" [ngClass]="{'fa-spin': refreshLoading}" aria-hidden="true"></i> Refresh Coins</button>
+    </div>
+    <div class="column2">
+      <h3>Portfolio Value</h3>
+      <h1 class="portfolio-value">{{ portfolioValue | currency:'USD':true }}</h1>
+
+      <!-- Data is saved in this browser only. Signup to access your data on any device  -->
+      <!-- <button md-raised-button color="primary">Sign Up</button> -->
+
+      <p class="text-right history">Last 7 Days</p>
+      <md-spinner *ngIf="graphLoading"></md-spinner>
+      <div [hidden]="graphLoading">
+        <canvas baseChart #lineChart="base-chart" id="lineChart"
+          [datasets]="lineChartData"
+          [labels]="lineChartLabels"
+          [options]="lineChartOptions"
+          [legend]="lineChartLegend"
+          [chartType]="lineChartType">
+        </canvas>
+      </div>
+      <div class="features">
+        <p>Our Vision for this dashboard is for you to be able to manage all your crypto currency in one beautiful place.</p>
+        <h2>Features to come</h2>
+        <ul>
+          <li>Price Alerts via Email / Text</li>
+          <li>Portfolio Value and Individual Coin Chart View</li>
+          <li>Yearly, Monthly and Hourly Chart View</li>
+          <li>Portfolio Value and Coin Percent Changes</li>
+          <li>Portfolio Value and Coin Profit / Loss Data</li>
+          <li>Buying and Selling via Coinbase / Bittrex</li>
+        </ul>
+        <p>Found a bug or have a feature request?</p>
+        <a href="https://github.com/midnightfund/issues/issues/new" md-raised-button color="primary" target="_blank">Let us know on our github!</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="wrapper no-coins" *ngIf="!assets.length && !pageLoading">
+  <h1>Welcome to your coin tracker!</h1>
+  <p>Add a coin, followed by the amount you have to see your dashboard come to life!</p>
+</div>

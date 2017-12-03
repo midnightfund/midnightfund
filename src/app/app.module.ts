@@ -22,13 +22,15 @@ import { CustomFormsModule } from 'ng2-validation';
 import { TextMaskModule } from 'angular2-text-mask';
 import { ChartsModule } from 'ng2-charts';
 import { CurrencyPipe } from '@angular/common';
+import { DemoComponent } from './demo/demo.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     CallbackComponent,
     HomeComponent,
-    DashboardComponent
+    DashboardComponent,
+    DemoComponent
   ],
   imports: [
     BrowserModule,
