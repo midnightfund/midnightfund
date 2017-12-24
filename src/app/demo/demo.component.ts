@@ -31,7 +31,6 @@ export class DemoComponent implements OnInit {
   pageLoading: boolean = true;
   coinLoading: boolean = false;
   refreshLoading: boolean = false;
-  graphLoading: boolean = false;
   index: number = 0;
   numberMask = createNumberMask({
     prefix: '',
@@ -121,7 +120,7 @@ export class DemoComponent implements OnInit {
     } else {
       this.assets = JSON.parse(localStorage.getItem('assets'));
       this.assetMath();
-      this.assetGraph();
+      this.assetDraw(this.assets[0]);
     }
   }
 
@@ -156,9 +155,7 @@ export class DemoComponent implements OnInit {
     }, 0);
   }
 
-  assetGraph() {
-
-    this.index = 0;
+  assetDraw(asset) {
 
     setTimeout(() => {
       if(this.lineChart) {
@@ -167,21 +164,12 @@ export class DemoComponent implements OnInit {
         this.lineChart.chart.update();
       }
     });
+    console.log(asset);
+    this.http.post('https://5je39zckq6.execute-api.us-west-1.amazonaws.com/prod/coinPriceHistory', {coin: asset['coin'].replace(/ /g, '-')}).subscribe((data) => {
+      this.points = JSON.parse(data['body'])['price_usd'].reverse();
 
-    if(this.assets.length) {
-      this.assetDraw();
-    }
-  }
-
-  assetDraw() {
-    var asset = this.assets[this.index];
-    let days = [];
-    let prices = [];
-    this.http.get(`https://cors-anywhere.herokuapp.com/https://graphs.coinmarketcap.com/currencies/${asset['coin'].replace(/ /g, '-')}/`).subscribe((data) => {
-
-      console.log(data);
-
-      this.points = data['price_usd'].reverse();
+      let days = [];
+      let prices = [];
 
       for(let point of this.points)  {
         if(!days.includes(moment(point[0]).format('dddd'))) {
@@ -213,20 +201,12 @@ export class DemoComponent implements OnInit {
         if(this.lineChart.chart.data.labels.length < 7) {
           this.lineChart.chart.data.labels.push(day);
         }
-
         this.lineChart.chart.update();
       });
 
-      this.index++;
-
-      if(this.index < this.assets.length) {
-        this.assetDraw();
-      } else {
-        this.pageLoading = false;
-        this.coinLoading = false;
-        this.refreshLoading = false;
-        this.graphLoading = false;
-      }
+      this.pageLoading = false;
+      this.coinLoading = false;
+      this.refreshLoading = false;
     });
   }
 
@@ -250,14 +230,12 @@ export class DemoComponent implements OnInit {
   }
 
   deleteCoin(asset: object) {
-    this.graphLoading = true;
     this.assets.splice(this.assets.indexOf(asset), 1);
     this.updateCoins();
   }
 
   addCoin() {
     this.coinLoading = true;
-    this.graphLoading = true;
     // check if asset exists
     if(this.assets.filter((asset) => { return asset['coin'] === this.addCoinObject.value.coin }).length) {
       // find asset in array add to amount
@@ -275,7 +253,6 @@ export class DemoComponent implements OnInit {
 
   refreshCoins() {
     this.refreshLoading = true;
-    this.graphLoading = true;
     this.getCoins();
   }
 
@@ -284,6 +261,6 @@ export class DemoComponent implements OnInit {
     this.validCoin = false;
     this.addCoinObject.reset();
     this.assetMath();
-    this.assetGraph();
+    this.assetDraw(this.assets[0]);
   }
 }

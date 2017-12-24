@@ -6,6 +6,10 @@ md-spinner {
   height: 100vh;
 }
 
+.asset {
+  cursor: pointer;
+}
+
 .wrapper md-spinner {
   height: auto;
   margin-top: 50px;
