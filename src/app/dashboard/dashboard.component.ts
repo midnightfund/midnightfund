@@ -79,7 +79,7 @@ export class DashboardComponent implements OnInit {
         {
           ticks: {
             callback: (label, index, labels) => {
-              return this.currencyPipe.transform(label, 'USD', true, '1.0-0');
+              return this.currencyPipe.transform(label, 'USD', true);
             }
           }
         }
@@ -117,13 +117,15 @@ export class DashboardComponent implements OnInit {
   }
 
   getCoins() {
-    this.http.get('https://api.coinmarketcap.com/v1/ticker/?limit=2000').subscribe(data => {
-      this.coins = data;
-      console.log(this.coins);
+    this.http.get('https://5je39zckq6.execute-api.us-west-1.amazonaws.com/prod/coins').subscribe(data => {
+      console.log(data);
+      this.coins = JSON.parse(data['body']);
       this.filteredCoins = this.addCoinObject.get('coin').valueChanges
         .startWith(null)
         .map(coinInput => coinInput ? this.filterCoins(coinInput) : this.coins.slice());
         this.getAssets();
+    }, (error) => {
+      console.log(error);
     });
   }
 
@@ -180,8 +182,8 @@ export class DashboardComponent implements OnInit {
         label: asset['coin'],
         pointBackgroundColor: asset['color'],
         pointBorderColor: '#fff',
-        pointHoverBackgroundColor: '#fff',
-        pointHoverBorderColor: asset['color']
+        pointHoverBackgroundColor: asset['color'],
+        pointHoverBorderColor: '#fff'
       });
       this.lineChart.chart.update();
 

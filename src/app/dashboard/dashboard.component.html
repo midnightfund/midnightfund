@@ -23,19 +23,20 @@
 
 <div class="wrapper" *ngIf="assets.length" [hidden]="pageLoading">
   <div class="row">
-    <div class="column1">
+    <div class="column1 column-margin">
       <canvas baseChart #doughnutChart="base-chart" id="doughnutChart"
         [data]="doughnutChartData"
         [labels]="doughnutChartLabels"
         [chartType]="doughnutChartType"
         [colors]="bidDistributionStatColors"
-        [options]="options">
+        [options]="options"
+        (chartClick)="assetDraw(assets[$event.active[0]._index])">
       </canvas>
       <p *ngFor="let asset of assets" class="text-center" [ngStyle]="{'color': asset.color}"><span (click)="assetDraw(asset)" class="asset">{{ asset.amount }} {{ asset.coin }} ({{ asset.value | currency:'USD':true }})</span><button md-icon-button (click)="deleteCoin(asset)"><i class="fa fa-trash-o" aria-hidden="true"></i></button></p>
 
       <button md-button (click)="refreshCoins()" class="refresh-button" [disabled]="refreshLoading"><i class="fa fa-refresh" [ngClass]="{'fa-spin': refreshLoading}" aria-hidden="true"></i> Refresh Coins</button>
     </div>
-    <div class="column2">
+    <div class="column2 column-margin">
       <h3>Portfolio Value</h3>
       <h1 class="portfolio-value">{{ portfolioValue | currency:'USD':true }}</h1>
       <p class="text-right history">Last 7 Days</p>
