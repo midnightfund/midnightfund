@@ -9,7 +9,7 @@
 <div class="crypto-tracker">
   <div class="row">
     <div class="column1">
-      <img src="https://j.gifs.com/BLrVox.gif" alt="">
+      <img src="../../assets/images/dashboard.gif" alt="">
     </div>
     <div class="column1">
       <h2>Managing your crypto in multiple exchanges sucks!</h2>
@@ -21,36 +21,36 @@
 <div class="fund">
   <h2>We Are Also Starting a Crypto Fund!</h2>
   <p>Join the waiting list for our crypto fund (Goes Live Mid 2018)</p>
-  <div class="row">
+  <form (ngSubmit)="joinWaitingList('2549987')" class="row">
     <div class="column2 column-margin">
       <md-form-field>
-        <input mdInput placeholder="Your Email">
+        <input mdInput placeholder="Your Email" [formControl]="waitingListForm.controls['email']" [value]="waitingListForm.controls['email'].value" [readonly]="fundJoined">
       </md-form-field>
     </div>
     <div class="column1 column-margin button-align">
-      <button md-raised-button class="full-width">Join</button>
+      <button md-raised-button class="full-width" [disabled]="waitingListForm.invalid || fundJoined || fundLoading"><ng-container *ngIf="fundJoined && !fundLoading">Joined</ng-container><ng-container *ngIf="!fundJoined && !fundLoading">Join</ng-container><i class="fa fa-circle-o-notch fa-spin" aria-hidden="true" *ngIf="fundLoading"></i></button>
     </div>
-  </div>
+  </form>
 </div>
 <div class="trading-ai">
   <div class="row">
     <div class="column1">
       <h2>Trading AI</h2>
       <p>We are developing an automated trading algorithm that buys and sells to maximize profits.</p>
-      <p>Join the waiting list for our Trading AI<br>(Goes Live Early 2018)</p>
-      <div class="row">
+      <p>Join the waiting list for our Trading ai<br>(Goes Live Early 2018)</p>
+      <form class="row" (ngSubmit)="joinWaitingList('2549986')">
         <div class="column2 column-margin">
           <md-form-field>
-            <input mdInput placeholder="Your Email">
+            <input mdInput placeholder="Your Email" [formControl]="waitingListForm.controls['email']" [value]="waitingListForm.controls['email'].value" [readonly]="tradingAiJoined">
           </md-form-field>
         </div>
         <div class="column1 column-margin button-align">
-          <button md-raised-button class="full-width" color="primary">Join</button>
+          <button md-raised-button class="full-width" color="primary" [disabled]="waitingListForm.invalid || tradingAiJoined || tradingAiLoading"><ng-container *ngIf="tradingAiJoined && !tradingAiLoading">Joined</ng-container><ng-container *ngIf="!tradingAiJoined && !tradingAiLoading">Join</ng-container><i class="fa fa-circle-o-notch fa-spin" aria-hidden="true" *ngIf="tradingAiLoading"></i></button>
         </div>
-      </div>
+      </form>
     </div>
     <div class="column1">
-      <img src="http://50000feet.com/sites/default/files/50k_ai_03.gif" alt="">
+      <img src="../../assets/images/ai.gif" alt="">
     </div>
   </div>
 </div>
